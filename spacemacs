@@ -32,36 +32,52 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '((auto-completion :variables
-                      auto-completion-tab-key-behavior 'complete
-                      auto-completion-return-key-behavior nil
-                      auto-completion-enable-sort-by-usage)
+   '(auto-completion
      emacs-lisp
+     git
+     go
+     lsp
+     multiple-cursors
+     ;rust
+     shell
+     treemacs
+     version-control
+
+     (auto-completion :variables
+                      auto-completion-return-key-behavior nil
+                      auto-completion-tab-key-behavior 'complete
+                      auto-completion-enable-sort-by-usage t
+                      auto-completion-private-snippets-directory nil)
+
+     (lsp :variables
+          lsp-ui-doc-enable 1
+          lsp-ui-sideline-code-actions-prefix " "
+          lsp-ui-sideline-show-hover nil
+          lsp-rust-server 'rust-analyzer
+          lsp-rust-analyzer-server-display-inlay-hints t)
+
      (go :variables
          go-backend 'lsp
          go-format-before-save t
          go-use-golangci-lint t
          go-use-test-args "-race -timeout 10s")
+
      (git :variables
           git-enable-magit-delta-plugin t)
-     (lsp :variables
-          lsp-ui-doc-enable nil
-          lsp-ui-sideline-code-actions-prefix " "
-          lsp-rust-server 'rust-analyzer
-          lsp-rust-analyzer-expand-macro t
-          lsp-rust-analyzer-server-display-inlay-hints t)
-     multiple-cursors
-     (shell :variables
-             shell-default-height 30
-             shell-default-position 'bottom)
-     spell-checking
-     (syntax-checking :variables
-                      syntax-checking-enable-tooltips t)
-     version-control
+
      (treemacs :variables
                treemacs-project-follow-mode t
                treemacs-git-mod 'extended
-               treemacs-git-commit-diff-mode t))
+               treemacs-git-commit-diff-mode t)
+ 
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
+     (rust :variables
+           rust-format-on-save t)
+     (syntax-checking :variables
+                      syntax-checking-enable-tooltips nil)
+   )
 
    ;; List of additional packages that will be installed without being wrapped
    ;; in a layer (generally the packages are installed only and should still be
@@ -574,7 +590,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-
 )
 
 
@@ -599,3 +614,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  )
 )
+
+

@@ -116,7 +116,7 @@ installspacemacs() {
     echo "[INFO] Spacemacs has been downloaded"
 
     echo "[INFO] Applying spacemacs dotfiles..."
-    rsync -Ir spacemacs.d/ ~/.spacemacs.d 
+    cp -f ./spacemacs ~/.spacemacs
     echo "[INFO] Spacemacs dotfiles have been applied"
 }
 
