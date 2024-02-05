@@ -86,15 +86,15 @@ installomz() {
     rm -rf /tmp/simplerich
     mkdir -p /tmp/simplerich
     mkdir -p ~/.oh-my-zsh/themes/
-    git clone --recursive https://github.com/philip82148/simplerich-zsh-theme /tmp/simplerich
+
+    git clone --recursive https://github.com/philip82148/simplerich-zsh-theme /tmp/simplerich || \
+        echo "[INFO] Already exists"
     cp -f /tmp/simplerich/simplerich.zsh-theme ~/.oh-my-zsh/themes/simplerich.zshrc.s
     echo "[INFO] simplerich zsh theme has been downloaded"
 
     echo "[INFO] Copying .zshrc config file..."
     cp -f ./zshrc ~/.zshrc
     echo "[INFO] .zshrc file has been applied"
-
-    exec $SHELL -l
 }
 
 installfonts() {
@@ -127,14 +127,12 @@ installrust() {
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
     echo "[INFO] rustup has been installed"
 
-    exec $SHELL -l
-
     echo "[INFO] Updating rust toolchain..."
-    rustup update
+    $HOME/.cargo/bin/rustup update
     echo "[INFO] Rust toolchain has been updated"
 
     echo "[INFO] Installing rust-analyzer..."
-    rustup component add rust-analyzer
+    $HOME/.cargo/bin/rustup component add rust-analyzer
     echo "[INFO] Rust-analyzer has been added"
 
     echo "[INFO] Rust has been installed"
@@ -152,6 +150,14 @@ installgo() {
     done
 
     echo "[INFO] Go modules have been installed"
+
+    echo "[INFO] Adding GOPATH to .zshenv file..."
+    grep -qxF 'export GOPATH="$HOME/go"' ~/.zshenv || echo 'export GOPATH="$HOME/GO"' >> ~/.zshenv
+    echo "[INFO] GOPATH has been added"
+
+    echo "[INFO] Altering PATH in .zshenv to include go binaries..."
+    grep -qxF 'export PATH=$PATH:$GOPATH/bin' ~/.zshenv || echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.zshenv
+    echo "[INFO] PATH has been added"
 }
 
 configurealacritty() {
