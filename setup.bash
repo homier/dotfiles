@@ -64,7 +64,7 @@ installdnf () {
 
 installflatpaks() {
     echo "[INFO] Adding flathub repo..."
-    flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
+    sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
     echo "[INFO] Flathub repo has been added"
 
     echo "[INFO] Installing flatpak packages..."
