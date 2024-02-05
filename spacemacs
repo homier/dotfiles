@@ -81,9 +81,9 @@ This function should only modify configuration layer settings."
 
      (treemacs :variables
                treemacs-project-follow-mode t
-               treemacs-git-mod 'deferred
-               treemacs-lock-width t
-               treemacs-git-commit-diff-mode 'enable)
+               treemacs-filewatch-mode t
+               treemacs-use-git-mode 'extended
+               treemacs-lock-width t)
 
      (version-control :variables
                       version-control-diff-tool 'git-gutter
@@ -603,6 +603,14 @@ Put your configuration code here, except for variables that should be set
 before packages are loaded."
   ;; Configure GitGutter
   (add-hook 'after-init-hook 'global-git-gutter-mode)
+
+  ;; Configure LSP
+  (with-eval-after-load 'lsp-mode
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.vscode\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.builds\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.reports\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.git\\'")
+    (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.go\\'"))
 )
 
 
