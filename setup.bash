@@ -153,7 +153,7 @@ installgo() {
     echo "[INFO] Go modules have been installed"
 
     echo "[INFO] Adding GOPATH to .zshenv file..."
-    grep -qxF 'export GOPATH="$HOME/go"' ~/.zshenv || echo 'export GOPATH="$HOME/GO"' >> ~/.zshenv
+    grep -qxF 'export GOPATH="$HOME/go"' ~/.zshenv || echo 'export GOPATH="$HOME/go"' >> ~/.zshenv
     echo "[INFO] GOPATH has been added"
 
     echo "[INFO] Altering PATH in .zshenv to include go binaries..."
@@ -187,3 +187,4 @@ installrust
 installgo
 installspacemacs
 configurealacritty
+
