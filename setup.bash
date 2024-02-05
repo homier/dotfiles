@@ -84,12 +84,13 @@ installomz() {
 
     echo "[INFO] Downloading simplerich zsh theme..."
     rm -rf /tmp/simplerich
+
     mkdir -p /tmp/simplerich
     mkdir -p ~/.oh-my-zsh/themes/
 
-    git clone --recursive https://github.com/philip82148/simplerich-zsh-theme /tmp/simplerich || \
-        echo "[INFO] Already exists"
+    git clone --recursive https://github.com/philip82148/simplerich-zsh-theme /tmp/simplerich
     cp -f /tmp/simplerich/simplerich.zsh-theme ~/.oh-my-zsh/themes/simplerich.zshrc.s
+
     echo "[INFO] simplerich zsh theme has been downloaded"
 
     echo "[INFO] Copying .zshrc config file..."

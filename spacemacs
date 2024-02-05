@@ -32,13 +32,13 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(go
-     auto-completion
+   '( auto-completion
      emacs-lisp
      git
      go
      lsp
      multiple-cursors
+     python
      rust
      shell
      spacemacs-project
@@ -68,6 +68,12 @@ This function should only modify configuration layer settings."
           lsp-ui-sideline-show-hover nil
           lsp-rust-server 'rust-analyzer
           lsp-rust-analyzer-server-display-inlay-hints t)
+
+     (python :variables
+             python-backend 'lsp
+             python-lsp-server 'pyright
+             python-test-runner 'pytest
+             python-format-on-save nil)
 
      (rust :variables
            rust-format-on-save t)
@@ -602,6 +608,10 @@ configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
   ;; Configure GitGutter
+  (custom-set-variables
+   '(git-gutter:modified-sign "=")
+   '(git-gutter:added-sign "+")
+   '(git-gutter:deleted-sign "-"))
   (add-hook 'after-init-hook 'global-git-gutter-mode)
 
   ;; Configure LSP
