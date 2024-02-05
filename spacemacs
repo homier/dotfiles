@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '(
+   '(go
      auto-completion
      emacs-lisp
      git
@@ -42,7 +42,6 @@ This function should only modify configuration layer settings."
      rust
      shell
      spacemacs-project
-     toml
      treemacs
      version-control
      yaml
@@ -59,6 +58,7 @@ This function should only modify configuration layer settings."
      (go :variables
          go-backend 'lsp
          go-format-before-save t
+         gofmt-command "goimports"
          go-use-golangci-lint t
          go-use-test-args "-race -timeout 10s")
 
@@ -84,6 +84,10 @@ This function should only modify configuration layer settings."
                treemacs-git-mod 'deferred
                treemacs-lock-width t
                treemacs-git-commit-diff-mode 'enable)
+
+     (version-control :variables
+                      version-control-diff-tool 'git-gutter
+                      version-control-diff-side 'left)
    )
 
    ;; List of additional packages that will be installed without being wrapped
@@ -597,6 +601,8 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  ;; Configure GitGutter
+  (add-hook 'after-init-hook 'global-git-gutter-mode)
 )
 
 
