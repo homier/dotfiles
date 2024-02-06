@@ -32,7 +32,7 @@ This function should only modify configuration layer settings."
 
    ;; List of configuration layers to load.
    dotspacemacs-configuration-layers
-   '( auto-completion
+   '(auto-completion
      emacs-lisp
      git
      go
@@ -64,8 +64,10 @@ This function should only modify configuration layer settings."
 
      (lsp :variables
           lsp-ui-doc-enable 1
+          lsp-ui-sideline-show-hover t
+          lsp-lens-enable t
+          lsp-ui-sideline-show-code-actions t
           lsp-ui-sideline-code-actions-prefix " "
-          lsp-ui-sideline-show-hover nil
           lsp-rust-server 'rust-analyzer
           lsp-rust-analyzer-server-display-inlay-hints t)
 
@@ -104,7 +106,7 @@ This function should only modify configuration layer settings."
    ;; `dotspacemacs/user-config'. To use a local version of a package, use the
    ;; `:location' property: '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(nerd-icons treemacs-nerd-icons)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
@@ -295,7 +297,7 @@ It should only modify the values of Spacemacs settings."
    ;; Default font or prioritized list of fonts. The `:size' can be specified as
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
-   dotspacemacs-default-font '("Source Code Pro"
+   dotspacemacs-default-font '("Hack Nerd Font Mono"
                                :size 10.0
                                :weight normal
                                :width normal)
@@ -607,6 +609,14 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
+  (use-package nerd-icons
+    :custom
+    (nerd-icons-font-family "Hack Nerd Font Mono"))
+
+  (use-package treemacs-nerd-icons
+    :config
+    (treemacs-load-theme "nerd-icons"))
+
   ;; Configure GitGutter
   (custom-set-variables
    '(git-gutter:modified-sign "=")
