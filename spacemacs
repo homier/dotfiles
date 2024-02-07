@@ -64,10 +64,12 @@ This function should only modify configuration layer settings."
 
      (lsp :variables
           lsp-ui-doc-enable 1
+          lsp-ui-sideline-enable t
+          lsp-ui-sideline-mode nil
           lsp-ui-sideline-show-hover t
-          lsp-lens-enable t
           lsp-ui-sideline-show-code-actions t
           lsp-ui-sideline-code-actions-prefix " "
+          lsp-headerline-breadcrumb-enable t
           lsp-rust-server 'rust-analyzer
           lsp-rust-analyzer-server-display-inlay-hints t)
 
@@ -596,6 +598,8 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  ;; Configure catppuccin flavour
+  (setq catppuccin-flavor 'frappe)
 )
 
 
@@ -613,10 +617,6 @@ This function is called at the very end of Spacemacs startup, after layer
 configuration.
 Put your configuration code here, except for variables that should be set
 before packages are loaded."
-  ;; Configure catppuccin flavour
-  (setq catppuccin-flavor 'frappe)
-  (catppuccin-reload)
-
   (use-package nerd-icons
     :custom
     (nerd-icons-font-family "Hack Nerd Font Mono"))
@@ -624,6 +624,12 @@ before packages are loaded."
   (use-package treemacs-nerd-icons
     :config
     (treemacs-load-theme "nerd-icons"))
+
+  ;; Flycheck errors highlighting settings
+  (setq flycheck-highlighting-mode 'lines)
+  (setq flycheck-highlighting-style 'level-face)
+  (setq flycheck-indication-mode 'left-fringe)
+  (setq left-fringe-width 1)
 
   ;; Configure GitGutter
   (custom-set-variables
