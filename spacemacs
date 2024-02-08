@@ -37,10 +37,12 @@ This function should only modify configuration layer settings."
      git
      go
      lsp
+     lua
      multiple-cursors
      python
      rust
      shell
+     spacemacs-editing
      spacemacs-project
      treemacs
      version-control
@@ -284,7 +286,7 @@ It should only modify the values of Spacemacs settings."
    ;; with 2 themes variants, one dark and one light)
    ;; dotspacemacs-themes '(spacemacs-dark
    ;;                      spacemacs-light)
- 
+
    dotspacemacs-themes '(catppuccin)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
@@ -599,7 +601,7 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
   ;; Configure catppuccin flavour
-  (setq catppuccin-flavor 'frappe)
+  (setq catppuccin-flavor 'mocha)
 )
 
 
@@ -645,6 +647,14 @@ before packages are loaded."
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.reports\\'")
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.git\\'")
     (add-to-list 'lsp-file-watch-ignored-directories "[/\\\\]\\.go\\'"))
+
+  ;; Configure emacs shell
+  '(explicit-shell-file-name "/bin/zsh")
+  '(explicit-zsh-args '("--interactive" "--login"))
+  '(comint-process-echoes 0)
+
+  ;; Editor settings
+  (setq require-final-newline t)
 )
 
 
@@ -669,5 +679,3 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  )
 )
-
-
