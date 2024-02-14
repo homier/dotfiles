@@ -44,6 +44,7 @@ This function should only modify configuration layer settings."
      shell
      spacemacs-editing
      spacemacs-project
+     themes-megapack
      treemacs
      version-control
      yaml
@@ -68,10 +69,13 @@ This function should only modify configuration layer settings."
           lsp-ui-doc-enable 1
           lsp-ui-sideline-enable t
           lsp-ui-sideline-mode nil
-          lsp-ui-sideline-show-hover t
+          lsp-ui-sideline-show-hover nil
           lsp-ui-sideline-show-code-actions t
           lsp-ui-sideline-code-actions-prefix " "
-          lsp-headerline-breadcrumb-enable t
+          lsp-signature-render-documentation t
+          lsp-eldoc-enable-hover t
+          lsp-diagnostics-provider 'flycheck
+          lsp-headerline-breadcrumb-enable nil
           lsp-rust-server 'rust-analyzer
           lsp-rust-analyzer-server-display-inlay-hints t)
 
@@ -95,7 +99,7 @@ This function should only modify configuration layer settings."
                treemacs-project-follow-mode t
                treemacs-filewatch-mode t
                treemacs-use-git-mode 'extended
-               treemacs-lock-width t)
+               treemacs-lock-width nil)
 
      (version-control :variables
                       version-control-diff-tool 'git-gutter
@@ -284,10 +288,11 @@ It should only modify the values of Spacemacs settings."
    ;; List of themes, the first of the list is loaded when spacemacs starts.
    ;; Press `SPC T n' to cycle to the next theme in the list (works great
    ;; with 2 themes variants, one dark and one light)
-   ;; dotspacemacs-themes '(spacemacs-dark
-   ;;                      spacemacs-light)
+   dotspacemacs-themes '(doom-palenight
+                         spacemacs-dark
+                         spacemacs-light)
 
-   dotspacemacs-themes '(catppuccin)
+   ;; dotspacemacs-themes '(catppuccin)
 
    ;; Set the theme for the Spaceline. Supported themes are `spacemacs',
    ;; `all-the-icons', `custom', `doom', `vim-powerline' and `vanilla'. The
@@ -306,7 +311,7 @@ It should only modify the values of Spacemacs settings."
    ;; a non-negative integer (pixel size), or a floating-point (point size).
    ;; Point size is recommended, because it's device independent. (default 10.0)
    dotspacemacs-default-font '("Hack Nerd Font Mono"
-                               :size 10.0
+                               :size 11.0
                                :weight normal
                                :width normal)
 
@@ -670,6 +675,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(git-gutter:added-sign "+")
+ '(git-gutter:deleted-sign "-")
+ '(git-gutter:modified-sign "=")
  '(package-selected-packages
    '(yaml-mode counsel-gtags counsel swiper ivy dap-mode lsp-docker lsp-treemacs bui yaml lsp-mode ggtags ron-mode rustic xterm-color markdown-mode rust-mode toml-mode ws-butler writeroom-mode winum which-key volatile-highlights vim-powerline vi-tilde-fringe uuidgen undo-tree treemacs-projectile treemacs-persp treemacs-icons-dired toc-org term-cursor symon symbol-overlay string-inflection string-edit-at-point spacemacs-whitespace-cleanup spacemacs-purpose-popwin spaceline space-doc restart-emacs request rainbow-delimiters quickrun popwin pcre2el password-generator paradox overseer org-superstar open-junk-file nameless multi-line macrostep lorem-ipsum link-hint inspector info+ indent-guide hybrid-mode hungry-delete holy-mode hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt helm-xref helm-themes helm-swoop helm-purpose helm-projectile helm-org helm-mode-manager helm-make helm-descbinds helm-comint helm-ag google-translate golden-ratio flycheck-package flycheck-elsa flx-ido fancy-battery eyebrowse expand-region evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-textobj-line evil-surround evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-goggles evil-exchange evil-evilified-state evil-escape evil-collection evil-cleverparens evil-args evil-anzu eval-sexp-fu emr elisp-slime-nav elisp-def editorconfig dumb-jump drag-stuff dotenv-mode dired-quick-sort diminish devdocs define-word column-enforce-mode clean-aindent-mode centered-cursor-mode auto-highlight-symbol auto-compile all-the-icons aggressive-indent ace-link ace-jump-helm-line)))
 (custom-set-faces
@@ -677,5 +685,5 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- )
+ '(trailing-whitespace ((t (:background "cyan" :foreground "cyan")))))
 )
