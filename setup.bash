@@ -110,15 +110,24 @@ installfonts() {
     echo "[INFO] Hack font has been installed"
 }
 
-installspacemacs() {
-    echo "[INFO] Installing spacemacs..."
-    echo "[INFO] Downloading spacemacs..."
-    git clone https://github.com/syl20bnr/spacemacs ~/.emacs.d || echo "[INFO] Spacemacs is already existing"
-    echo "[INFO] Spacemacs has been downloaded"
+installemacs() {
+    echo "[INFO] Installing doom emacs..."
 
-    echo "[INFO] Applying spacemacs dotfiles..."
-    cp -f ./spacemacs ~/.spacemacs
-    echo "[INFO] Spacemacs dotfiles have been applied"
+    echo "[INFO] Downloading doom emacs..."
+    git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs || \
+        echo "[INFO] Doom emacs is already existing"
+    echo "[INFO] Doom emacs has been downloaded"
+
+    echo "[INFO] Running doom sync..."
+     ~/.config/emacs/bin/doom install --no-config
+
+    echo "[INFO] Applying doom emacs config..."
+    cp -a ./doom/* ~/.config/doom/
+
+    echo "[INFO] Syncing doom emacs..."
+    ~/.config/emacs/bin/doom sync
+
+    echo "[INFO] Doom emacs has been installed"
 }
 
 installrust() {
@@ -158,6 +167,10 @@ installgo() {
 
     echo "[INFO] Altering PATH in .zshenv to include go binaries..."
     grep -qxF 'export PATH=$PATH:$GOPATH/bin' ~/.zshenv || echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.zshenv
+
+    echo "[INFO] Altering PATH in .zshenv to include doom binaries..."
+    grep -qxF 'export PATH=$PATH:~/.config/emacs/bin' ~/.zshenv || echo 'export PATH=$PATH:~/.config/emacs/bin' >> ~/.zshenv
+
     echo "[INFO] PATH has been added"
 }
 
@@ -185,6 +198,6 @@ installfonts
 installomz
 installrust
 installgo
-installspacemacs
+installemacs
 configurealacritty
 
