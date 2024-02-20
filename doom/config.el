@@ -90,3 +90,14 @@
   (define-fringe-bitmap 'git-gutter-fr:added [#b111111] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:modified [#b111111] nil nil '(center repeated))
   (define-fringe-bitmap 'git-gutter-fr:deleted [#b111111] nil nil '(center repeated)))
+
+(defun my-eglot-organize-imports () (interactive)
+       (eglot-code-actions nil nil "source.organizeImports" t))
+
+(after! eglot
+  (add-hook 'before-save-hook 'my-eglot-organize-imports nil t)
+  (add-hook 'before-save-hook 'eglot-format-buffer))
+
+(after! gotest
+  :config
+  (setq go-test-verbose t))

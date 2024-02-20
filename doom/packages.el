@@ -52,3 +52,4 @@
 (package! nerd-icons)
 (package! treemacs-nerd-icons)
 (package! yasnippet)
+(package! gotest)
