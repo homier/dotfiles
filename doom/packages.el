@@ -51,5 +51,7 @@
 
 (package! nerd-icons)
 (package! treemacs-nerd-icons)
+(package! treemacs-magit)
 (package! yasnippet)
 (package! gotest)
+(package! whitespace)

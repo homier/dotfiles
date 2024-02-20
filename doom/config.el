@@ -81,7 +81,12 @@
     (nerd-icons-font-family "Hack Nerd Font Mono"))
   (use-package treemacs-nerd-icons
     :config
-    (treemacs-load-theme "nerd-icons")))
+    (treemacs-load-theme "nerd-icons"))
+  (use-package treemacs
+    :config
+    (setq treemacs-git-mode 'extended)
+    (setq treemacs-filewatch-mode t)
+    (setq treemacs-git-commit-diff-mode t)))
 
 (after! git-gutter-fringe
   ;; standardize default fringe width
@@ -94,10 +99,29 @@
 (defun my-eglot-organize-imports () (interactive)
        (eglot-code-actions nil nil "source.organizeImports" t))
 
+(defun my-eglot-format-buffer-on-save () (interactive)
+       (add-hook 'before-save-hook #'eglot-format-buffer -10 t))
+
 (after! eglot
   (add-hook 'before-save-hook 'my-eglot-organize-imports nil t)
-  (add-hook 'before-save-hook 'eglot-format-buffer))
+  (add-hook 'before-save-hook 'eglot-format-buffer)
+  (add-hook 'before-save-hook
+            (lambda ()
+              (call-interactively 'eglot-code-action-organize-imports))
+            nil t)
+  (add-hook 'go-mode-hook 'eglot-ensure)
+  (add-hook 'go-mode-hook #'my-eglot-format-buffer-on-save))
 
 (after! gotest
   :config
   (setq go-test-verbose t))
+
+(use-package! whitespace
+  :config
+  (global-whitespace-mode +1)
+  (setq
+   whitespace-style '(face trailing newline)
+   whitespace-display-mappings '(
+                                 (space-mark   ?\     [?\u00B7]     [?.])
+                                 (space-mark   ?\xA0  [?\u00A4]     [?_])
+                                 (newline-mark ?\n    [?¬ ?\n]))))
