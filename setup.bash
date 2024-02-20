@@ -118,14 +118,19 @@ installemacs() {
         echo "[INFO] Doom emacs is already existing"
     echo "[INFO] Doom emacs has been downloaded"
 
+    echo "[INFO] Altering PATH in .zshenv to include doom binaries..."
+    grep -qxF 'export PATH=$PATH:~/.config/emacs/bin' ~/.zshenv || \
+        echo 'export PATH=$PATH:~/.config/emacs/bin' >> ~/.zshenv
+
     echo "[INFO] Running doom sync..."
-     ~/.config/emacs/bin/doom install --no-config
+    source ~/.zshenv &&  ~/.config/emacs/bin/doom install --no-config --env
 
     echo "[INFO] Applying doom emacs config..."
+    mkdir -p ~/.config/doom
     cp -a ./doom/* ~/.config/doom/
 
     echo "[INFO] Syncing doom emacs..."
-    ~/.config/emacs/bin/doom sync
+    ~/.config/emacs/bin/doom sync -e
 
     echo "[INFO] Doom emacs has been installed"
 }
@@ -168,9 +173,6 @@ installgo() {
     echo "[INFO] Altering PATH in .zshenv to include go binaries..."
     grep -qxF 'export PATH=$PATH:$GOPATH/bin' ~/.zshenv || echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.zshenv
 
-    echo "[INFO] Altering PATH in .zshenv to include doom binaries..."
-    grep -qxF 'export PATH=$PATH:~/.config/emacs/bin' ~/.zshenv || echo 'export PATH=$PATH:~/.config/emacs/bin' >> ~/.zshenv
-
     echo "[INFO] PATH has been added"
 }
 
@@ -200,4 +202,3 @@ installrust
 installgo
 installemacs
 configurealacritty
-
