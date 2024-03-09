@@ -2,6 +2,8 @@
 
 set -e
 
+ROOTPATH=$(dirname $(realpath "$0"))
+
 dnfpackages=(
     alacritty
     emacs
@@ -11,9 +13,10 @@ dnfpackages=(
     golang
     htop
     jq
+    neovim
     net-tools
     python3
-    python3
+    python3-neovim
     rsync
     telegram-desktop
     the_silver_searcher
@@ -94,7 +97,7 @@ installomz() {
     echo "[INFO] simplerich zsh theme has been downloaded"
 
     echo "[INFO] Copying .zshrc config file..."
-    cp -f ./zshrc ~/.zshrc
+    cp -f $ROOTPATH/zshrc ~/.zshrc
     echo "[INFO] .zshrc file has been applied"
 }
 
@@ -127,12 +130,25 @@ installemacs() {
 
     echo "[INFO] Applying doom emacs config..."
     mkdir -p ~/.config/doom
-    cp -a ./doom/* ~/.config/doom/
+    cp -a $ROOTPATH/doom/* ~/.config/doom/
 
     echo "[INFO] Syncing doom emacs..."
     ~/.config/emacs/bin/doom sync -e
 
     echo "[INFO] Doom emacs has been installed"
+}
+
+installneovim() {
+    echo "[INFO] Installing neovim..."
+
+    echo "[INFO] Downloading neovim dotfiles..."
+    git clone https://github.com/homier/kickstart.nvim ~/.config/nvim || \
+        echo "[INFO] Neovim dotfiles are already present"
+
+    echo "[INFO] Ensuring neovim dotfiles are up-to-date..."
+    cd ~/.config/nvim && git pull --rebase && cd $ROOTPATH
+
+    echo "[INFO] Neovim has been installed"
 }
 
 installrust() {
@@ -187,7 +203,7 @@ configurealacritty() {
     echo "[INFO] Alacritty themes have been downloaded"
 
     echo "[INFO] Applying alacritty configuration..."
-    cp $(realpath alacritty.toml) ~/.config/alacritty/alacritty.toml
+    cp -af $ROOTPATH/alacritty.toml ~/.config/alacritty/alacritty.toml
     echo "[INFO] Alacritty configuration has been applied"
 
     echo "[INFO] Alacritty has been set up"
@@ -201,4 +217,5 @@ installomz
 installrust
 installgo
 installemacs
+installneovim
 configurealacritty
