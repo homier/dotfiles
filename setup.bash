@@ -203,7 +203,7 @@ configurealacritty() {
     echo "[INFO] Alacritty themes have been downloaded"
 
     echo "[INFO] Applying alacritty configuration..."
-    cp -af $ROOTPATH/alacritty.toml ~/.config/alacritty/alacritty.toml
+    cp -af $ROOTPATH/alacritty/* ~/.config/alacritty/
     echo "[INFO] Alacritty configuration has been applied"
 
     echo "[INFO] Alacritty has been set up"
