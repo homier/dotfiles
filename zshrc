@@ -102,3 +102,5 @@ source $ZSH/oh-my-zsh.sh
 # alias ohmyzsh="mate ~/.oh-my-zsh"
 
 alias enw="doom run -nw"
+alias vim="nvim"
+

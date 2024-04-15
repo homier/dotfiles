@@ -148,6 +148,9 @@ installneovim() {
     echo "[INFO] Ensuring neovim dotfiles are up-to-date..."
     cd ~/.config/nvim && git pull --rebase && cd $ROOTPATH
 
+    echo "[INFO] Ensuring neovim is set as default git editor"
+    git config --global core.editor nvim
+
     echo "[INFO] Neovim has been installed"
 }
 
