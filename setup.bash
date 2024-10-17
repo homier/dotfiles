@@ -86,13 +86,12 @@ installomz() {
     echo "[INFO] Default sheel has been changed to zsh"
 
     echo "[INFO] Downloading simplerich zsh theme..."
-    rm -rf /tmp/simplerich
 
-    mkdir -p /tmp/simplerich
+    rm -rf /tmp/simplerich
     mkdir -p ~/.oh-my-zsh/themes/
 
     git clone --recursive https://github.com/philip82148/simplerich-zsh-theme /tmp/simplerich
-    cp -f /tmp/simplerich/simplerich.zsh-theme ~/.oh-my-zsh/themes/simplerich.zshrc.s
+    cp -f /tmp/simplerich/simplerich.zsh-theme ~/.oh-my-zsh/themes/simplerich.zsh-theme
 
     echo "[INFO] simplerich zsh theme has been downloaded"
 
@@ -175,8 +174,8 @@ installrust() {
 installgo() {
     echo "[INFO] Installing go modules..."
 
-    GO111MODULE=on go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
-    GO111MODULE=on go install golang.org/x/tools/gopls@latest
+    go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
+    go install golang.org/x/tools/gopls@latest
 
     for module in ${gomodes[@]}
     do
