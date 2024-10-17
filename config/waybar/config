@@ -1,0 +1,99 @@
+{
+	"layer": "top",
+	"position": "top",
+	"margin": "2 8 -2 8",
+
+	"modules-left": [
+		"hyprland/workspaces",
+		"hyprland/submap"
+	],
+	"modules-center": [
+		"clock"
+	],
+	"modules-right": [
+		"pulseaudio",
+		"network",
+		"memory",
+		"power-profiles-daemon",
+		"battery",
+		"hyprland/language"
+	],
+
+	"clock": {
+		"tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>",
+		"format": "{:%a, %d %b %H:%M}"
+	},
+
+	"memory": {
+		"format": "{} %"
+	},
+
+	"power-profiles-daemon": {
+		"format": "{icon}",
+		"format-icons": {
+			"power-saver": "🍃",
+			"performance": "🗲",
+			"balanced": "🧘"
+		}
+	},
+
+	"hyprland/language": {
+		"format-en": "EN",
+		"format-ru": "RU",
+		"format-by": "BY"
+	},
+
+	"hyprland/workspaces": {
+		"format": "{icon}",
+		"on-scroll-up": "hyprctl dispatch workspace e+1",
+		"on-scroll-down": "hyprctl dispatch workspace e-1"
+	},
+
+	"pulseaudio": {
+		// "scroll-step": 1, // %, can be a float
+		"reverse-scrolling": 1,
+		"format": "{volume}% {icon} {format_source}",
+		"format-bluetooth": "{volume}% {icon} {format_source}",
+		"format-bluetooth-muted": " {icon} {format_source}",
+		"format-muted": " {format_source}",
+		"format-source": "{volume}% ",
+		"format-source-muted": "",
+		"format-icons": {
+			"headphone": "",
+			"hands-free": "",
+			"headset": "",
+			"phone": "",
+			"portable": "",
+			"car": "",
+			"default": ["", "", ""]
+		},
+        	"on-click": "pavucontrol",
+        	"min-length": 13,
+    	},
+
+	"battery": {
+		"states": {
+			"good": 95,
+			"warning": 15,
+			"critical": 5
+		},
+		"format": "{capacity}% {power:4.2f}",
+		"format-full": "{capacity}% {power:4.2f}",
+		"format-charging": "{capacity}% ",
+		"format-plugged": "{capacity}% ",
+		"format-alt": "{time}",
+	},
+	"battery#bat2": {
+		"bat": "BAT2"
+	},
+
+	"network": {
+		// "interface": "wlp2*", // (Optional) To force the use of this interface
+		"format-wifi": "{essid} ({signalStrength}%) ",
+		"format-ethernet": "{ipaddr}/{cidr} ",
+		"tooltip-format": "{ifname} via {gwaddr} ",
+		"format-linked": "{ifname} (No IP) ",
+		"format-disconnected": "Disconnected ⚠",
+		"format-alt": "{ifname}: {ipaddr}/{cidr}"
+	},
+}

@@ -3,31 +3,39 @@
 set -e
 
 ROOTPATH=$(dirname $(realpath "$0"))
+CONFIGPATH=$ROOTPATH/config
+
+dnfcoprs=(
+    erikreider/SwayNotificationCenter
+)
 
 dnfpackages=(
+    SwayNotificationCenter
     alacritty
-    emacs
-    flatpak
     firefox
+    flatpak
     git
     golang
     htop
+    hyprland
     jq
     neovim
     net-tools
+    network-manager-applet
     python3
     python3-neovim
+    ripgrep
     rsync
-    telegram-desktop
-    the_silver_searcher
+    waybar
     wget
     wireguard-tools
     zsh
 )
 
 flatpackages=(
-    flathub
     com.spotify.Client
+    flathub
+    org.telegram.desktop
 )
 
 gomodes=(
@@ -48,44 +56,44 @@ gomodes=(
 
 fonts_hack_version=v3.1.1
 
-preinstall() {
-    echo "[INFO] Installing RPM Fusion repositories..."
+installdnf () {
+    echo "[INFO] dnf: installing RPM fusion"
     sudo dnf install -y https://download1.rpmfusion.org/free/fedora/rpmfusion-free-release-$(rpm -E %fedora).noarch.rpm
     sudo dnf install -y https://download1.rpmfusion.org/nonfree/fedora/rpmfusion-nonfree-release-$(rpm -E %fedora).noarch.rpm 
-    echo "[INFO] RPM Fusion repositories have been installed"
-}
+    echo "[INFO] dnf: RPM fusion installed"
 
-installdnf () {
-    echo "[INFO] Performming DNF upgrade..."
     sudo dnf upgrade -y 
-    echo "[INFO] DNF system upgrade has been completed"
 
-    echo "[INFO] Installing DNF packages..."
+    echo "[INFO] dnf: installing copr repositories"
+    sudo dnf copr enable -y "${dnfcoprs[@]}"
+    echo "[INFO] dnf: copr repositories installed"
+
+    echo "[INFO] dnf: installing packages"
     sudo dnf install -y "${dnfpackages[@]}"
-    echo "[INFO] DNF packages have been installed"
+    echo "[INFO] dnf: done"
 }
 
 installflatpaks() {
-    echo "[INFO] Adding flathub repo..."
+    echo "[INFO] flatpak: installing flathub repository"
     sudo flatpak remote-add --if-not-exists flathub https://flathub.org/repo/flathub.flatpakrepo
-    echo "[INFO] Flathub repo has been added"
+    echo "[INFO] flatpak: flathub installed"
 
-    echo "[INFO] Installing flatpak packages..."
+    echo "[INFO] flatpak: installing packages"
     flatpak install -y "${flatpackages[@]}"
-    echo "[INFO] Flatpak packages have been installed"
+    echo "[INFO] flatpak: done"
 }
 
 installomz() {
-    echo "[INFO] Installing oh-my-zsh..."
-    sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" || \
-        echo "[INFO] omz is already present"
-    echo "[INFO] oh-my-zsh has been installed"
+    echo "[INFO] omz: installing"
 
-    echo "[INFO] Changing default shell to zsh"
+    [[ -x $HOME/.oh-my-zsh ]] || ZSH= sh -c "$(curl -fsSL https://raw.githubusercontent.com/ohmyzsh/ohmyzsh/master/tools/install.sh)"
+
+    echo "[INFO] omz: installed"
+
+    echo "[INFO] omz: changing shell to zsh"
     sudo usermod -s $(which zsh) $USER
-    echo "[INFO] Default sheel has been changed to zsh"
 
-    echo "[INFO] Downloading simplerich zsh theme..."
+    echo "[INFO] omz: downloading themes"
 
     rm -rf /tmp/simplerich
     mkdir -p ~/.oh-my-zsh/themes/
@@ -93,86 +101,49 @@ installomz() {
     git clone --recursive https://github.com/philip82148/simplerich-zsh-theme /tmp/simplerich
     cp -f /tmp/simplerich/simplerich.zsh-theme ~/.oh-my-zsh/themes/simplerich.zsh-theme
 
-    echo "[INFO] simplerich zsh theme has been downloaded"
-
-    echo "[INFO] Copying .zshrc config file..."
-    cp -f $ROOTPATH/zshrc ~/.zshrc
-    echo "[INFO] .zshrc file has been applied"
+    echo "[INFO] omz: done"
 }
 
 installfonts() {
-    echo "[INFO] Installing fonts..."
-    echo "[INFO] Downloading hack font..."
+    echo "[INFO] fonts: installing"
+    echo "[INFO] fonts: installing Hack Nerd Font Mono"
     wget https://github.com/ryanoasis/nerd-fonts/releases/download/${fonts_hack_version}/Hack.tar.xz -O /tmp/hack.tar.xz
-    echo "[INFO] Hack font has been downloaded"
 
-    echo "[INFO] Unpacking hack font..."
     mkdir -p ~/.local/share/fonts/hack-nerd-font
     tar -xf /tmp/hack.tar.xz -C ~/.local/share/fonts/hack-nerd-font
-    echo "[INFO] Hack font has been installed"
-}
-
-installemacs() {
-    echo "[INFO] Installing doom emacs..."
-
-    echo "[INFO] Downloading doom emacs..."
-    git clone --depth 1 https://github.com/doomemacs/doomemacs ~/.config/emacs || \
-        echo "[INFO] Doom emacs is already existing"
-    echo "[INFO] Doom emacs has been downloaded"
-
-    echo "[INFO] Altering PATH in .zshenv to include doom binaries..."
-    grep -qxF 'export PATH=$PATH:~/.config/emacs/bin' ~/.zshenv || \
-        echo 'export PATH=$PATH:~/.config/emacs/bin' >> ~/.zshenv
-
-    echo "[INFO] Running doom sync..."
-    source ~/.zshenv &&  ~/.config/emacs/bin/doom install --no-config --env
-
-    echo "[INFO] Applying doom emacs config..."
-    mkdir -p ~/.config/doom
-    cp -a $ROOTPATH/doom/* ~/.config/doom/
-
-    echo "[INFO] Syncing doom emacs..."
-    ~/.config/emacs/bin/doom sync -e
-
-    echo "[INFO] Doom emacs has been installed"
+    echo "[INFO] fonts: done"
 }
 
 installneovim() {
-    echo "[INFO] Installing neovim..."
+    echo "[INFO] neovim: bootstrapping config..."
 
-    echo "[INFO] Downloading neovim dotfiles..."
+    mkdir -p ~/.config/nvim
+
     git clone https://github.com/homier/kickstart.nvim ~/.config/nvim || \
-        echo "[INFO] Neovim dotfiles are already present"
+        echo "[INFO] nvim: dotfiles are already present"
 
-    echo "[INFO] Ensuring neovim dotfiles are up-to-date..."
-    cd ~/.config/nvim && git pull --rebase && cd $ROOTPATH
+    cd ~/.config/nvim \
+        && git stash \
+        && git pull --rebase \
+        || git stash pop \
+        || cd $ROOTPATH
 
-    echo "[INFO] Ensuring neovim is set as default git editor"
-    git config --global core.editor nvim
-
-    echo "[INFO] Neovim has been installed"
+    echo "[INFO] nvim: done"
 }
 
 installrust() {
-    echo "[INFO] Installing rust..."
+    echo "[INFO] rust: installing"
 
-    echo "[INFO] Installing rustup..."
     curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh -s -- -y
-    echo "[INFO] rustup has been installed"
 
-    echo "[INFO] Updating rust toolchain..."
     $HOME/.cargo/bin/rustup update
-    echo "[INFO] Rust toolchain has been updated"
-
-    echo "[INFO] Installing rust-analyzer..."
     $HOME/.cargo/bin/rustup component add rust-analyzer
-    echo "[INFO] Rust-analyzer has been added"
 
-    echo "[INFO] Rust has been installed"
+    echo "[INFO] rust: done"
 }
 
 installgo() {
-    echo "[INFO] Installing go modules..."
+    echo "[INFO] go: installing modules"
 
     go install github.com/golangci/golangci-lint/cmd/golangci-lint@latest
     go install golang.org/x/tools/gopls@latest
@@ -182,42 +153,50 @@ installgo() {
         go install $module
     done
 
-    echo "[INFO] Go modules have been installed"
 
-    echo "[INFO] Adding GOPATH to .zshenv file..."
+    echo "[INFO] go: adding GOPATH to environment"
+
     grep -qxF 'export GOPATH="$HOME/go"' ~/.zshenv || echo 'export GOPATH="$HOME/go"' >> ~/.zshenv
-    echo "[INFO] GOPATH has been added"
-
-    echo "[INFO] Altering PATH in .zshenv to include go binaries..."
     grep -qxF 'export PATH=$PATH:$GOPATH/bin' ~/.zshenv || echo 'export PATH=$PATH:$GOPATH/bin' >> ~/.zshenv
 
-    echo "[INFO] PATH has been added"
+    echo "[INFO] go: done"
 }
 
-configurealacritty() {
-    echo "[INFO] Setting up alacritty..."
+configs() {
+    echo "[INFO] configs: applying $HOME/.config"
+    rsync -a $CONFIGPATH/ $HOME/.config
 
-    mkdir -p ~/.config/alacritty
-
-    echo "[INFO] Downloading alacritty themes..."
-    git clone https://github.com/alacritty/alacritty-theme ~/.config/alacritty/themes || \
-        echo "[INFO] Alacritty themes are already present"
-    echo "[INFO] Alacritty themes have been downloaded"
-
-    echo "[INFO] Applying alacritty configuration..."
-    cp -af $ROOTPATH/alacritty/* ~/.config/alacritty/
-    echo "[INFO] Alacritty configuration has been applied"
-
-    echo "[INFO] Alacritty has been set up"
+    echo "[INFO] configs: applying zsh config"
+    cp -a $ROOTPATH/zshrc $HOME/.zshrc
+    echo "[INFO] configs: done"
 }
 
-preinstall
+configuresystemd() {
+    echo "[INFO] systemd: enabling services"
+    systemctl enable --now --user gpg-agent
+    systemctl enable --now --user ssh-agent
+    systemctl enable --now --user plasma-polkit-agent
+    echo "[INFO] systemd: done"
+}
+
+configuregit() {
+    echo "[INFO] git: applying global configs"
+    git config --global user.name "Dzmitry Mikhalapau"
+    git config --global user.email "dzmitry.mikhalapau@gmail.com"
+    git config --global commit.gpgsign true
+    git config --global core.editor vim
+    echo "[INFO] git: done"
+}
+
 installdnf
 installflatpaks
 installfonts
 installomz
 installrust
 installgo
-installemacs
+
 installneovim
-configurealacritty
+
+configs
+configuresystemd
+configuregit
