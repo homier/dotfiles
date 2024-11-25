@@ -19,6 +19,7 @@ dnfpackages=(
     htop
     hyprland
     jq
+    kitty
     neovim
     net-tools
     network-manager-applet
